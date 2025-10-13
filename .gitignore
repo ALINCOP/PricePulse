@@ -1,0 +1,26 @@
+# CMake build folder
+/build/
+/bin/
+
+# Visual Studio files
+*.vcxproj*
+*.sln
+*.user
+*.ncb
+*.opensdf
+*.sdf
+*.vcxproj.filters
+
+# Qt Creator / Qt specific
+*.pro.user
+*.qmake.stash
+*.moc
+*.obj
+*.o
+*.exe
+*.dll
+*.pdb
+
+# OS specific
+.DS_Store
+Thumbs.db
