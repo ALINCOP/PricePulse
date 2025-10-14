@@ -17,6 +17,7 @@ public:
     explicit TaskManager(QObject* parent = nullptr);
 
     void updateProducts();
+    void addProduct();
 
 signals:
     void productUpdated(const Product& product);

@@ -23,6 +23,9 @@ private slots:
     // Triggered when the "Refresh" button is clicked
     void onRefreshClicked();
 
+    // Triggered when the "Add Item" button is clicked
+    void onAddItemClicked();
+
     // Called when TaskManager emits a new product update
     void onProductUpdated(const Product& product);
 

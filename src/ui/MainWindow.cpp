@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // --- CONNECT SIGNALS ---
     connect(ui->refreshBtn, &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
+    connect(ui->addItemBtn, &QPushButton::clicked, this, &MainWindow::onAddItemClicked);
     connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
 
     // --- POPULATE TABLE AT START ---
@@ -58,6 +59,12 @@ void MainWindow::onRefreshClicked() {
     m_taskManager->updateProducts();
 }
 
+void MainWindow::onAddItemClicked() {
+    qDebug() << "Add product list...";
+
+    // Ask TaskManager to emit Add Product
+    m_taskManager->addProduct();
+}
 // --- SLOT: Receives product updates from TaskManager ---
 void MainWindow::onProductUpdated(const Product& product) {
     if (!m_table) return;

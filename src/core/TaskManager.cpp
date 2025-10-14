@@ -25,3 +25,8 @@ void TaskManager::updateProducts()
             });
     }
 }
+
+void TaskManager::addProduct()
+{
+    // TO DO
+}
