@@ -36,7 +36,6 @@ set(UIS
 # Create exe
 qt_add_executable(PricePulse
     ${SOURCES}
-    ${HEADERS}
     ${UIS}
 )
 
@@ -49,7 +48,14 @@ target_link_libraries(PricePulse PRIVATE
     Qt6::Sql
 )
 
-target_include_directories(PricePulse PRIVATE src src/ui src/core)
+# Include source directories
+target_include_directories(PricePulse PRIVATE 
+    src
+    src/core
+    src/ui
+    $<TARGET_PROPERTY:PricePulse,AUTOUIC_INCLUDE_DIRECTORIES>
+)
+
 
 set_target_properties(PricePulse PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin

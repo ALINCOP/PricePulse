@@ -2,10 +2,373 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="windowTitle">
-   <string>PricePulse</string>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1800</width>
+    <height>1000</height>
+   </rect>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <property name="windowTitle">
+   <string>PricePulse - Price Monitoring Hub</string>
+  </property>
+  <property name="styleSheet">
+   <string>QMainWindow {
+    background-color: #0f172a;
+    color: #e2e8f0;
+}</string>
+  </property>
+  <!-- Central Widget -->
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string>QWidget {
+    background-color: #0f172a;
+}</string>
+   </property>
+   <layout class="QHBoxLayout" name="mainLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <!-- SIDEBAR -->
+    <item>
+     <widget class="QWidget" name="sidebarWidget">
+      <property name="minimumWidth">
+       <number>280</number>
+      </property>
+      <property name="maximumWidth">
+       <number>280</number>
+      </property>
+      <property name="styleSheet">
+       <string>#sidebarWidget {
+    background-color: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid rgba(148, 163, 184, 0.1);
+}</string>
+      </property>
+      <layout class="QVBoxLayout" name="sidebarLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <!-- Logo -->
+       <item>
+        <widget class="QLabel" name="logoLabel">
+         <property name="text">
+          <string>📊 PricePulse</string>
+         </property>
+         <property name="styleSheet">
+          <string>#logoLabel {
+    font-size: 20px;
+    font-weight: bold;
+    color: #60a5fa;
+    padding: 24px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <!-- Navigation placeholder - populated from C++ -->
+       <item>
+        <widget class="QWidget" name="navContainer" native="true"/>
+       </item>
+       <!-- Stretch -->
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <!-- MAIN CONTENT -->
+    <item>
+     <layout class="QVBoxLayout" name="contentLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <!-- TOP HEADER -->
+      <item>
+       <widget class="QWidget" name="headerWidget">
+        <property name="maximumHeight">
+         <number>60</number>
+        </property>
+        <property name="styleSheet">
+         <string>#headerWidget {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 8px 28px;
+}</string>
+        </property>
+        <layout class="QHBoxLayout" name="headerLayout">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <!-- Search Box -->
+         <item>
+          <widget class="QLineEdit" name="searchBox">
+           <property name="placeholderText">
+            <string>🔍 Search products, crypto, stocks...</string>
+           </property>
+           <property name="maximumWidth">
+            <number>300</number>
+           </property>
+           <property name="styleSheet">
+            <string>QLineEdit {
+    background-color: rgba(71, 85, 105, 0.3);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #e2e8f0;
+    font-size: 13px;
+}
+
+QLineEdit:focus {
+    background-color: rgba(71, 85, 105, 0.5);
+    border: 1px solid rgba(59, 130, 246, 0.5);
+}</string>
+           </property>
+          </widget>
+         </item>
+         <!-- Stretch -->
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <!-- Refresh Button -->
+         <item>
+          <widget class="QPushButton" name="refreshBtn">
+           <property name="text">
+            <string>🔄 Refresh</string>
+           </property>
+           <property name="styleSheet">
+            <string>QPushButton {
+    background-color: rgba(71, 85, 105, 0.3);
+    color: #e2e8f0;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+QPushButton:hover {
+    background-color: rgba(71, 85, 105, 0.5);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}</string>
+           </property>
+          </widget>
+         </item>
+         <!-- Add Item Button -->
+         <item>
+          <widget class="QPushButton" name="addItemBtn">
+           <property name="text">
+            <string>➕ Add Item</string>
+           </property>
+           <property name="styleSheet">
+            <string>QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #3b82f6, stop:1 #2563eb);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #60a5fa, stop:1 #3b82f6);
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <!-- SCROLL AREA -->
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string>QScrollArea {
+    background-color: #0f172a;
+    border: none;
+}
+
+QScrollBar:vertical {
+    background-color: transparent;
+    width: 8px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: rgba(148, 163, 184, 0.2);
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: rgba(148, 163, 184, 0.4);
+}</string>
+        </property>
+        <widget class="QWidget" name="scrollContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1120</width>
+           <height>840</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="scrollLayout">
+          <property name="spacing">
+           <number>32</number>
+          </property>
+          <property name="leftMargin">
+           <number>28</number>
+          </property>
+          <property name="topMargin">
+           <number>28</number>
+          </property>
+          <property name="rightMargin">
+           <number>28</number>
+          </property>
+          <property name="bottomMargin">
+           <number>28</number>
+          </property>
+          <!-- Page Title -->
+          <item>
+           <widget class="QLabel" name="pageTitle">
+            <property name="text">
+             <string>Price Monitoring Hub</string>
+            </property>
+            <property name="styleSheet">
+             <string>#pageTitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e2e8f0;
+}</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <!-- Page Subtitle -->
+          <item>
+           <widget class="QLabel" name="pageSubtitle">
+            <property name="text">
+             <string>Track and monitor prices across all your items</string>
+            </property>
+            <property name="styleSheet">
+             <string>#pageSubtitle {
+    font-size: 13px;
+    color: rgba(148, 163, 184, 0.7);
+    margin-bottom: 20px;
+}</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <!-- Categories placeholder - populated from C++ -->
+          <item>
+           <widget class="QWidget" name="categoriesContainer" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <!-- Stretch -->
+          <item>
+           <spacer name="verticalStretch">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <resources/>
  <connections/>

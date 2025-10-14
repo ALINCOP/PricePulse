@@ -1,43 +1,71 @@
 #include "MainWindow.h"
+#include "ui_MainWindow.h"  // Auto-generated from MainWindow.ui
+#include <QTableWidget>
+#include <QHeaderView>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QHeaderView>
+#include <QDateTime>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    m_taskManager(new TaskManager(this))
 {
-    QWidget* central = new QWidget(this);
-    setCentralWidget(central);
+    // Load UI elements from .ui file
+    ui->setupUi(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(central);
+    // Set default window size
+    resize(1400, 900);
 
-    m_table = new QTableWidget(0, 4, this);
-    QStringList headers = {"Product Name", "Store", "Price", "Last Checked"};
-    m_table->setHorizontalHeaderLabels(headers);
+    // --- CREATE TABLE DYNAMICALLY ---
+    m_table = new QTableWidget(this);
+    m_table->setObjectName("productsTable"); // Needed for findChild
+    m_table->setColumnCount(4);
+    m_table->setHorizontalHeaderLabels({ "Product Name", "Store", "Price", "Last Checked" });
     m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    // Styling
+    m_table->setStyleSheet(
+        "QTableWidget { background-color: rgba(30, 41, 59, 0.6); color: #e2e8f0; border: none; } "
+        "QHeaderView::section { background-color: rgba(71, 85, 105, 0.4); font-weight: bold; }"
+    );
+
+    // Add table to the scroll area layout from UI
+    auto* layout = new QVBoxLayout(ui->categoriesContainer);
     layout->addWidget(m_table);
 
-    QPushButton* refreshBtn = new QPushButton("Refresh", this);
-    layout->addWidget(refreshBtn);
-
-    m_taskManager = new TaskManager(this);
-
-    connect(refreshBtn, &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
+    // --- CONNECT SIGNALS ---
+    connect(ui->refreshBtn, &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
     connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
+
+    // --- POPULATE TABLE AT START ---
+    m_taskManager->updateProducts(); // Emit signals for all initial dummy products
 }
 
-void MainWindow::onRefreshClicked()
-{
-    m_table->setRowCount(0); // clear table
+MainWindow::~MainWindow() {
+    delete ui;
+}
+
+// --- SLOT: Triggered when user clicks Refresh button ---
+void MainWindow::onRefreshClicked() {
+    qDebug() << "Refreshing product list...";
+
+    // Clear existing rows before updating
+    if (m_table) m_table->setRowCount(0);
+
+    // Ask TaskManager to emit updates again
     m_taskManager->updateProducts();
 }
 
-void MainWindow::onProductUpdated(const Product& product)
-{
+// --- SLOT: Receives product updates from TaskManager ---
+void MainWindow::onProductUpdated(const Product& product) {
+    if (!m_table) return;
+
     int row = m_table->rowCount();
     m_table->insertRow(row);
     m_table->setItem(row, 0, new QTableWidgetItem(product.name));
     m_table->setItem(row, 1, new QTableWidgetItem(product.store));
     m_table->setItem(row, 2, new QTableWidgetItem(QString::number(product.price, 'f', 2)));
-    m_table->setItem(row, 3, new QTableWidgetItem(product.lastChecked.toString()));
+    m_table->setItem(row, 3, new QTableWidgetItem(product.lastChecked.toString("yyyy-MM-dd hh:mm:ss")));
 }

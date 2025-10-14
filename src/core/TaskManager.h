@@ -1,9 +1,7 @@
 #pragma once
 #include <QObject>
-#include <QRunnable>
 #include <QThreadPool>
 #include <QVector>
-#include <QTimer>
 #include <QDateTime>
 
 struct Product {
@@ -17,6 +15,7 @@ class TaskManager : public QObject {
     Q_OBJECT
 public:
     explicit TaskManager(QObject* parent = nullptr);
+
     void updateProducts();
 
 signals:
@@ -24,4 +23,5 @@ signals:
 
 private:
     QThreadPool m_pool;
+    QVector<Product> m_products; // store the initial dummy products
 };
