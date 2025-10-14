@@ -1,17 +1,18 @@
 #pragma once
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+#include <QTableWidget>
+#include "TaskManager.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
+
+private slots:
+    void onProductUpdated(const Product& product);
+    void onRefreshClicked();
 
 private:
-    Ui::MainWindow *ui;
+    QTableWidget* m_table;
+    TaskManager* m_taskManager;
 };

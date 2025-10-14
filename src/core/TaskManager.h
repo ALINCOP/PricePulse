@@ -1,26 +1,27 @@
 #pragma once
-
 #include <QObject>
 #include <QRunnable>
 #include <QThreadPool>
+#include <QVector>
+#include <QTimer>
+#include <QDateTime>
 
-class TaskManager : public QObject
-{
+struct Product {
+    QString name;
+    QString store;
+    double price;
+    QDateTime lastChecked;
+};
+
+class TaskManager : public QObject {
     Q_OBJECT
 public:
     explicit TaskManager(QObject* parent = nullptr);
+    void updateProducts();
 
-    void runTestTask();
+signals:
+    void productUpdated(const Product& product);
 
 private:
-    QThreadPool* m_threadPool;
-};
-
-//testTask
-class TestTask : public QRunnable
-{
-public:
-    void run() override {
-        qDebug("Running task in thread");
-    }
+    QThreadPool m_pool;
 };
