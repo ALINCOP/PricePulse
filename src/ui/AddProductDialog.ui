@@ -42,6 +42,33 @@ QPushButton {
 
 QPushButton:hover {
     background-color: #3b82f6;
+}
+
+QLineEdit {
+    background-color: rgba(71, 85, 105, 0.3);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #f8fafc;
+    selection-background-color: #2563eb;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3b82f6;
+    background-color: rgba(71, 85, 105, 0.5);
+}
+
+QDoubleSpinBox {
+    background-color: rgba(71, 85, 105, 0.3);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #f8fafc;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3b82f6;
+    background-color: rgba(71, 85, 105, 0.5);
 }</string>
   </property>
   <widget class="QPushButton" name="addButton">
@@ -142,7 +169,7 @@ QPushButton:hover {
     <enum>Qt::TextFormat::AutoText</enum>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="productLineEdit">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -152,7 +179,7 @@ QPushButton:hover {
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="storeLineEdit">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -162,7 +189,7 @@ QPushButton:hover {
     </rect>
    </property>
   </widget>
-  <widget class="QDoubleSpinBox" name="doubleSpinBox">
+  <widget class="QDoubleSpinBox" name="priceSpinBox">
    <property name="geometry">
     <rect>
      <x>240</x>
