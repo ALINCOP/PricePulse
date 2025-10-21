@@ -33,9 +33,12 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.3.0
         with:
-          version: 6.8.3
-          arch: win64
-          target: desktop
+            version: 6.8.3
+            arch: win64
+            target: desktop
+            dir: ${{ runner.temp }}/Qt
+            modules: qtbase,qtnetwork,qtsql
+            set-env: true
 
       # Configure CMake
       - name: Configure CMake
