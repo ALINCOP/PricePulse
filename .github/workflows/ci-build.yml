@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Qt6_DIR: 'C:\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6'
+      Qt6_DIR: ${{ env.LOCALAPPDATA }}\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6
 
     steps:
       # Checkout repo
