@@ -3,6 +3,8 @@
 #include <QThreadPool>
 #include <QVector>
 #include <QDateTime>
+#include <QRunnable>
+#include <QDebug>
 
 struct Product {
     QString name;
@@ -16,10 +18,15 @@ class TaskManager : public QObject {
 public:
     explicit TaskManager(QObject* parent = nullptr);
 
+    // Emit updates for initial dummy products
     void updateProducts();
-    void addProduct();
+
+public slots:
+    // Add a new product in a separate thread
+    void addProduct(const Product& product);
 
 signals:
+    // Emitted when a product is added or updated
     void productUpdated(const Product& product);
 
 private:

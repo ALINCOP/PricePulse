@@ -6,7 +6,7 @@ TaskManager::TaskManager(QObject* parent)
 {
     m_pool.setMaxThreadCount(QThread::idealThreadCount());
 
-    // Initialize the dummy products here
+    // Initialize dummy products
     m_products = {
         {"iPhone 15 Pro", "eMAG", 5999.99, QDateTime::currentDateTime()},
         {"Samsung Galaxy S24", "Altex", 4799.50, QDateTime::currentDateTime()},
@@ -17,16 +17,19 @@ TaskManager::TaskManager(QObject* parent)
 
 void TaskManager::updateProducts()
 {
-    for (const auto& prod : m_products) {
-        // Each product update runs in its own thread
-        m_pool.start([this, prod]() {
+    for (const auto& product : m_products) {
+        // Run each update in a separate thread
+        m_pool.start([this, product]() {
             QThread::sleep(1); // simulate delay
-            emit productUpdated(prod);
+            emit productUpdated(product); // Notify UI
             });
     }
 }
 
-void TaskManager::addProduct()
+void TaskManager::addProduct(const Product& product)
 {
-    // TO DO
+    m_pool.start([this, product]() {
+        QThread::sleep(1); // simulate some processing
+        emit productUpdated(product); // Notify UI
+        });
 }

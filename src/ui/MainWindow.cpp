@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"  // Auto-generated from MainWindow.ui
+#include "AddProductDialog.h"
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QVBoxLayout>
@@ -10,7 +11,8 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_taskManager(new TaskManager(this))
+    m_taskManager(new TaskManager(this)),
+    m_addDialog(new AddProductDialog(this))
 {
     // Load UI elements from .ui file
     ui->setupUi(this);
@@ -40,9 +42,13 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->addItemBtn, &QPushButton::clicked, this, &MainWindow::onAddItemClicked);
     connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
 
+    // Connect dialog signal to TaskManager
+    connect(m_addDialog, &AddProductDialog::productSubmitted, m_taskManager, &TaskManager::addProduct);
+
     // --- POPULATE TABLE AT START ---
     m_taskManager->updateProducts(); // Emit signals for all initial dummy products
 }
+
 
 MainWindow::~MainWindow() {
     delete ui;
@@ -60,11 +66,13 @@ void MainWindow::onRefreshClicked() {
 }
 
 void MainWindow::onAddItemClicked() {
-    qDebug() << "Add product list...";
-
-    // Ask TaskManager to emit Add Product
-    m_taskManager->addProduct();
+    // Just show the pre-created dialog
+    m_addDialog->show();
+    m_addDialog->raise();     // Bring dialog to front
+    m_addDialog->activateWindow(); // Give it focus
 }
+
+
 // --- SLOT: Receives product updates from TaskManager ---
 void MainWindow::onProductUpdated(const Product& product) {
     if (!m_table) return;
