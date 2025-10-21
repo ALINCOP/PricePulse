@@ -1,0 +1,40 @@
+name: ci-build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      Qt6_DIR: 'C:\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6'
+
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up MSVC environment
+      - name: Setup MSVC 2022
+        uses: microsoft/setup-msbuild@v1.1
+
+      # Configure CMake
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -A x64 -DQt6_DIR=%Qt6_DIR%
+
+      # Build
+      - name: Build project
+        run: |
+          cd build
+          cmake --build . --config Release
