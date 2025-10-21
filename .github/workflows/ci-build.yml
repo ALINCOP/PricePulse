@@ -1,0 +1,54 @@
+name: ci-build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      Qt6_DIR: 'C:\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6'
+
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up MSVC environment
+      - name: Setup MSVC 2022
+        uses: microsoft/setup-msbuild@v1.1
+
+      # Install Qt6 via Chocolatey
+      # -y parameter for "yes" option during install
+      #- name: Install Qt6
+      #  run: choco install qt6 --version=6.8.3 -y
+        
+      # Qt6 is not available in Chocolatey
+      # Use Jurplel from Github Action
+      # Install Qt
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4.3.0
+        with:
+            version: 6.8.3
+            arch: win64
+            target: desktop
+            dir: ${{ runner.temp }}/Qt
+            modules: qtbase,qtnetwork,qtsql
+            set-env: true
+
+      # Configure CMake
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -A x64 -DQt6_DIR="%LOCALAPPDATA%\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6"
+
+      # Build
+      - name: Build project
+        run: |
+          cd build
+          cmake --build . --config Release
