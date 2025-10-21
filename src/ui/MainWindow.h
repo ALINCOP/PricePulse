@@ -11,6 +11,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+// Forward declaration; To check if this solution is nice to have
+class AddProductDialog;
+
 // The MainWindow class controls the main UI and handles interactions
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -23,6 +26,9 @@ private slots:
     // Triggered when the "Refresh" button is clicked
     void onRefreshClicked();
 
+    // Triggered when the "Add Item" button is clicked
+    void onAddItemClicked();
+
     // Called when TaskManager emits a new product update
     void onProductUpdated(const Product& product);
 
@@ -30,6 +36,7 @@ private:
     Ui::MainWindow* ui;          // Pointer to the auto-generated UI from MainWindow.ui
     TaskManager* m_taskManager;  // Handles background data fetching
     QTableWidget* m_table;       // Table to display products
+    AddProductDialog* m_addDialog; // Dialog for adding a new product
 
     // Can remove if using TaskManager
     void loadDummyProducts();
