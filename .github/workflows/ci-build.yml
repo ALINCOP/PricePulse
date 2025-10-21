@@ -22,6 +22,11 @@ jobs:
       - name: Setup MSVC 2022
         uses: microsoft/setup-msbuild@v1.1
 
+      # Install Qt6 via Chocolatey
+      # -y parameter for "yes" option during install
+      - name: Install Qt6
+        run: choco install qt6 --version=6.8.3 -y
+
       # Configure CMake
       - name: Configure CMake
         run: |
