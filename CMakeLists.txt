@@ -21,16 +21,19 @@ find_package(Qt6 6.8 COMPONENTS Core Gui Widgets Network Sql REQUIRED)
 set(SOURCES
     src/main.cpp
     src/ui/MainWindow.cpp
+    src/ui/AddProductDialog.cpp
     src/core/TaskManager.cpp
 )
 
 set(HEADERS
     src/ui/MainWindow.h
+    src/ui/AddProductDialog.h
     src/core/TaskManager.h
 )
 
 set(UIS
     src/ui/MainWindow.ui
+    src/ui/AddProductDialog.ui
 )
 
 # Create exe
