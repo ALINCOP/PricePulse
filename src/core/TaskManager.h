@@ -5,13 +5,7 @@
 #include <QDateTime>
 #include <QRunnable>
 #include <QDebug>
-
-struct Product {
-    QString name;
-    QString store;
-    double price;
-    QDateTime lastChecked;
-};
+#include "Product.h"
 
 class TaskManager : public QObject {
     Q_OBJECT

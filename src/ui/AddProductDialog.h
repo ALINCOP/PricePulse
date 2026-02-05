@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QDateTime>
 #include "TaskManager.h" // for Product struct
+#include "Product.h"
 
 namespace Ui { class AddProductDialog; }
 
