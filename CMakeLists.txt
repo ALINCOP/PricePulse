@@ -23,12 +23,15 @@ set(SOURCES
     src/ui/MainWindow.cpp
     src/ui/AddProductDialog.cpp
     src/core/TaskManager.cpp
+    src/core/DatabaseManager.cpp
 )
 
 set(HEADERS
     src/ui/MainWindow.h
     src/ui/AddProductDialog.h
     src/core/TaskManager.h
+    src/core/DatabaseManager.h
+    src/core/Product.h
 )
 
 set(UIS

@@ -1,17 +1,11 @@
 #pragma once
 #include <QObject>
-#include <QThreadPool>
+//#include <QThreadPool>
 #include <QVector>
 #include <QDateTime>
 #include <QRunnable>
 #include <QDebug>
-
-struct Product {
-    QString name;
-    QString store;
-    double price;
-    QDateTime lastChecked;
-};
+#include "Product.h"
 
 class TaskManager : public QObject {
     Q_OBJECT
@@ -30,6 +24,6 @@ signals:
     void productUpdated(const Product& product);
 
 private:
-    QThreadPool m_pool;
+    //QThreadPool m_pool;
     QVector<Product> m_products; // store the initial dummy products
 };
