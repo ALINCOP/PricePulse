@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include <QThreadPool>
+//#include <QThreadPool>
 #include <QVector>
 #include <QDateTime>
 #include <QRunnable>
@@ -30,6 +30,6 @@ signals:
     void productUpdated(const Product& product);
 
 private:
-    QThreadPool m_pool;
+    //QThreadPool m_pool;
     QVector<Product> m_products; // store the initial dummy products
 };
