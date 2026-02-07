@@ -1,17 +1,19 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"  // Auto-generated from MainWindow.ui
 #include "AddProductDialog.h"
-#include <QTableWidget>
+#include "DatabaseManager.h"
+
+#include <QTableView>
 #include <QHeaderView>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QDateTime>
+#include <QSqlTableModel>
+#include <QSqlRecord>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_taskManager(new TaskManager(this)),
     m_addDialog(new AddProductDialog(this))
 {
     // Load UI elements from .ui file
@@ -20,33 +22,49 @@ MainWindow::MainWindow(QWidget* parent)
     // Set default window size
     resize(1400, 900);
 
-    // --- CREATE TABLE DYNAMICALLY ---
-    m_table = new QTableWidget(this);
-    m_table->setObjectName("productsTable"); // Needed for findChild
-    m_table->setColumnCount(4);
-    m_table->setHorizontalHeaderLabels({ "Product Name", "Store", "Price", "Last Checked" });
+    // --- CREATE SQL MODEL ---
+    m_model = new QSqlTableModel(this);
+    m_model->setTable("products");
+    m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_model->select();
+
+    // Rename headers
+    m_model->setHeaderData(1, Qt::Horizontal, "Product Name");
+    m_model->setHeaderData(2, Qt::Horizontal, "Store");
+    m_model->setHeaderData(3, Qt::Horizontal, "Price");
+    m_model->setHeaderData(4, Qt::Horizontal, "Last Checked");
+
+    // --- CREATE TABLE VIEW ---
+    m_table = new QTableView(this);
+    m_table->setModel(m_model);
+    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    // Hide ID column
+    m_table->hideColumn(0);
 
     // Styling
     m_table->setStyleSheet(
-        "QTableWidget { background-color: rgba(30, 41, 59, 0.6); color: #e2e8f0; border: none; } "
+        "QTableView { background-color: rgba(30, 41, 59, 0.6); color: #e2e8f0; border: none; } "
         "QHeaderView::section { background-color: rgba(71, 85, 105, 0.4); font-weight: bold; }"
     );
 
-    // Add table to the scroll area layout from UI
     auto* layout = new QVBoxLayout(ui->categoriesContainer);
     layout->addWidget(m_table);
 
     // --- CONNECT SIGNALS ---
     connect(ui->refreshBtn, &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
     connect(ui->addItemBtn, &QPushButton::clicked, this, &MainWindow::onAddItemClicked);
-    connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
+    connect(ui->deleteItemBtn, &QPushButton::clicked, this, &MainWindow::onDeleteClicked);
+    //connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
 
-    // Connect dialog signal to TaskManager
-    connect(m_addDialog, &AddProductDialog::productSubmitted, m_taskManager, &TaskManager::addProduct);
-
-    // --- POPULATE TABLE AT START ---
-    m_taskManager->updateProducts(); // Emit signals for all initial dummy products
+    // --- CONNECT AddProductDialog ---
+    connect(m_addDialog, &AddProductDialog::productSubmitted,
+        this, [this](const Product& p) {
+            DatabaseManager::insertProduct(p);
+            m_model->select(); // refresh automat
+        });
 }
 
 
@@ -58,11 +76,7 @@ MainWindow::~MainWindow() {
 void MainWindow::onRefreshClicked() {
     qDebug() << "Refreshing product list...";
 
-    // Clear existing rows before updating
-    if (m_table) m_table->setRowCount(0);
-
-    // Ask TaskManager to emit updates again
-    m_taskManager->updateProducts();
+    m_model->select();  // reload din SQLite
 }
 
 void MainWindow::onAddItemClicked() {
@@ -72,15 +86,13 @@ void MainWindow::onAddItemClicked() {
     m_addDialog->activateWindow(); // Give it focus
 }
 
+void MainWindow::onDeleteClicked()
+{
+    auto rows = m_table->selectionModel()->selectedRows();
 
-// --- SLOT: Receives product updates from TaskManager ---
-void MainWindow::onProductUpdated(const Product& product) {
-    if (!m_table) return;
+    for (const QModelIndex& index : rows) {
+        m_model->removeRow(index.row());
+    }
 
-    int row = m_table->rowCount();
-    m_table->insertRow(row);
-    m_table->setItem(row, 0, new QTableWidgetItem(product.name));
-    m_table->setItem(row, 1, new QTableWidgetItem(product.store));
-    m_table->setItem(row, 2, new QTableWidgetItem(QString::number(product.price, 'f', 2)));
-    m_table->setItem(row, 3, new QTableWidgetItem(product.lastChecked.toString("yyyy-MM-dd hh:mm:ss")));
+    m_model->submitAll();   // DELETE
 }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QTableWidget>
-#include "TaskManager.h"
+#include <QTableView>
+#include <QSqlTableModel>
+//#include "TaskManager.h"
 
 // Forward declaration of the auto-generated Ui::MainWindow class.
 // This class is created by Qt's UIC (User Interface Compiler) from MainWindow.ui
@@ -30,12 +31,16 @@ private slots:
     void onAddItemClicked();
 
     // Called when TaskManager emits a new product update
-    void onProductUpdated(const Product& product);
+    //void onProductUpdated(const Product& product);
+
+    // Triggered when the "Delete" button is clicked
+    void onDeleteClicked();
 
 private:
     Ui::MainWindow* ui;          // Pointer to the auto-generated UI from MainWindow.ui
-    TaskManager* m_taskManager;  // Handles background data fetching
-    QTableWidget* m_table;       // Table to display products
+    //TaskManager* m_taskManager;  // Handles background data fetching
+    QTableView* m_table;       // Table to display products
+    QSqlTableModel* m_model;       // Table to display products
     AddProductDialog* m_addDialog; // Dialog for adding a new product
 
     // Can remove if using TaskManager
