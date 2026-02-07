@@ -1,6 +1,7 @@
 #include "AddProductDialog.h"
 #include "ui_AddProductDialog.h"
 #include <QDebug>
+#include <QMessageBox>
 
 AddProductDialog::AddProductDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::AddProductDialog)
@@ -9,6 +10,9 @@ AddProductDialog::AddProductDialog(QWidget* parent)
 
     // Set window title and optional styling
     setWindowTitle("Add Product");
+
+    ui->priceSpinBox->setMaximum(1e9);
+    ui->priceSpinBox->setDecimals(2);
 
     // Connect buttons to slots
     connect(ui->addButton, &QPushButton::clicked, this, &AddProductDialog::onSubmitClicked);
@@ -27,6 +31,15 @@ void AddProductDialog::onSubmitClicked()
     p.store = ui->storeLineEdit->text();
     p.price = ui->priceSpinBox->value();
     p.lastChecked = QDateTime::currentDateTime();
+
+    if (p.name.isEmpty() || p.store.isEmpty() || p.price <= 0.0) {
+        QMessageBox::warning(this, "Incomplete Data",
+            "Please fill all fields:\n"
+            "- Product Name\n"
+            "- Store\n"
+            "- Price (must be greater than 0)");
+        return;
+    }
 
     emit productSubmitted(p); // notify MainWindow / TaskManager
 
