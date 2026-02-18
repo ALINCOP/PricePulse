@@ -4,6 +4,9 @@ project(PricePulse LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+set(CMAKE_PREFIX_PATH "C:/Qt/6.7.3/msvc2022_64" CACHE PATH "Qt installation root")
+
 # QT6 automatic build functions
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -16,7 +19,7 @@ elseif(UNIX)
     message(STATUS "Configuring for Linux/Unix")
 endif()
 
-find_package(Qt6 6.8 COMPONENTS Core Gui Widgets Network Sql REQUIRED)
+find_package(Qt6 6.7 COMPONENTS Core Gui Widgets Network Sql WebEngineWidgets REQUIRED)
 
 set(SOURCES
     src/main.cpp
@@ -24,6 +27,7 @@ set(SOURCES
     src/ui/AddProductDialog.cpp
     src/core/TaskManager.cpp
     src/core/DatabaseManager.cpp
+    src/core/PriceScraper.cpp
 )
 
 set(HEADERS
@@ -32,6 +36,7 @@ set(HEADERS
     src/core/TaskManager.h
     src/core/DatabaseManager.h
     src/core/Product.h
+    src/core/PriceScraper.h
 )
 
 set(UIS
@@ -45,13 +50,13 @@ qt_add_executable(PricePulse
     ${UIS}
 )
 
-# Link qt modules
 target_link_libraries(PricePulse PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
     Qt6::Network
     Qt6::Sql
+    Qt6::WebEngineWidgets
 )
 
 # Include source directories

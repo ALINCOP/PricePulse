@@ -1,6 +1,6 @@
 # PricePulse
 
-PricePulse is a product and price monitoring tool built in C++20 using Qt 6.8.3
+PricePulse is a product and price monitoring tool built in C++20 using Qt 6.7.3
 
 ---
 
@@ -11,7 +11,7 @@ PricePulse is a product and price monitoring tool built in C++20 using Qt 6.8.3
    - C++ CMake tools for Windows
    - Windows 10 SDK
 
-2. **Qt 6.8.3 MSVC 2022 64-bit**
+2. **Qt 6.7.3 MSVC 2022 64-bit**
    - Required modules: Core, Gui, Widgets, Network, Sql
    - Optional: WebEngineWidgets (for future extensions)
 
@@ -34,7 +34,7 @@ cd build`
 
 3. Configure the project with CMake:
 
-`cmake .. -G "Visual Studio 17 2022" -A x64 -DQt6_DIR="C:\Qt\6.8.3\msvc2022_64\lib\cmake\Qt6"`
+`cmake .. -G "Visual Studio 17 2022" -A x64`
 
 4. Build the project:
 
