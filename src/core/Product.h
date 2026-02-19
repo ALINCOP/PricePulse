@@ -3,8 +3,9 @@
 #include <QDateTime>
 
 struct Product {
+    int id = -1;
     QString name;
-    QString store;
+    QString url;
     double price = 0.0;
     QDateTime lastChecked;
 };

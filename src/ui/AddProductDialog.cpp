@@ -28,15 +28,15 @@ void AddProductDialog::onSubmitClicked()
 {
     Product p;
     p.name = ui->productLineEdit->text();
-    p.store = ui->storeLineEdit->text();
+    p.url = ui->storeLineEdit->text();
     p.price = ui->priceSpinBox->value();
     p.lastChecked = QDateTime::currentDateTime();
 
-    if (p.name.isEmpty() || p.store.isEmpty() || p.price <= 0.0) {
+    if (p.name.isEmpty() || p.url.isEmpty() || p.price <= 0.0) {
         QMessageBox::warning(this, "Incomplete Data",
             "Please fill all fields:\n"
             "- Product Name\n"
-            "- Store\n"
+            "- Product URL\n"
             "- Price (must be greater than 0)");
         return;
     }

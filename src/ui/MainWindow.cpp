@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Rename headers
     m_model->setHeaderData(1, Qt::Horizontal, "Product Name");
-    m_model->setHeaderData(2, Qt::Horizontal, "Store");
+    m_model->setHeaderData(2, Qt::Horizontal, "Store URL");
     m_model->setHeaderData(3, Qt::Horizontal, "Price");
     m_model->setHeaderData(4, Qt::Horizontal, "Last Checked");
 
@@ -54,8 +54,8 @@ MainWindow::MainWindow(QWidget* parent)
     layout->addWidget(m_table);
 
     // --- CONNECT SIGNALS ---
-    connect(ui->refreshBtn, &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
-    connect(ui->addItemBtn, &QPushButton::clicked, this, &MainWindow::onAddItemClicked);
+    connect(ui->refreshBtn,    &QPushButton::clicked, this, &MainWindow::onRefreshClicked);
+    connect(ui->addItemBtn,    &QPushButton::clicked, this, &MainWindow::onAddItemClicked);
     connect(ui->deleteItemBtn, &QPushButton::clicked, this, &MainWindow::onDeleteClicked);
     //connect(m_taskManager, &TaskManager::productUpdated, this, &MainWindow::onProductUpdated);
 
@@ -65,6 +65,17 @@ MainWindow::MainWindow(QWidget* parent)
             DatabaseManager::insertProduct(p);
             m_model->select(); // refresh automat
         });
+
+    // PriceScraper to check price from the given URL
+    m_scraper = new PriceScraper(this);
+
+    // Connect semnalul la un slot pentru update UI și DB
+    connect(m_scraper, &PriceScraper::productsUpdated,
+        this, &MainWindow::onProductsScraped);
+
+    QList<Product> products = DatabaseManager::loadProducts();
+    // Start scraping each 60000 ms - 1minute
+    m_scraper->startScraping(products, 60000);
 }
 
 
@@ -75,6 +86,9 @@ MainWindow::~MainWindow() {
 // --- SLOT: Triggered when user clicks Refresh button ---
 void MainWindow::onRefreshClicked() {
     qDebug() << "Refreshing product list...";
+
+    //QList<Product> products = DatabaseManager::loadProducts();
+    //m_scraper->startScraping(products, 30000);
 
     m_model->select();  // reload din SQLite
 }
@@ -95,4 +109,18 @@ void MainWindow::onDeleteClicked()
     }
 
     m_model->submitAll();   // DELETE
+}
+
+void MainWindow::onProductsScraped(const QList<Product>& products)
+{
+    for (const auto& p : products)
+    {
+        DatabaseManager::updateProductPrice(
+            p.id,
+            p.price,
+            p.lastChecked
+        );
+    }
+
+    m_model->select();
 }

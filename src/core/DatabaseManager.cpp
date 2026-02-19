@@ -18,7 +18,7 @@ bool DatabaseManager::init()
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            store TEXT,
+            url TEXT,
             price REAL,
             last_checked TEXT
         )
@@ -31,13 +31,13 @@ void DatabaseManager::insertProduct(const Product& p)
 {
     QSqlQuery q;
     q.prepare(R"(
-        INSERT INTO products(name, store, price, last_checked)
+        INSERT INTO products(name, url, price, last_checked)
         VALUES (?, ?, ?, ?)
     )");
 
     // fill the placeholders "?"
     q.addBindValue(p.name); 
-    q.addBindValue(p.store);
+    q.addBindValue(p.url);
     q.addBindValue(p.price);
     q.addBindValue(p.lastChecked.toString(Qt::ISODate));
 
@@ -54,16 +54,40 @@ QList<Product> DatabaseManager::loadProducts()
 {
     QList<Product> list;
 
-    QSqlQuery q("SELECT name, store, price, last_checked FROM products");
+    QSqlQuery q("SELECT id, name, url, price, last_checked FROM products");
 
     while (q.next()) {
         Product p;
-        p.name = q.value(0).toString();
-        p.store = q.value(1).toString();
-        p.price = q.value(2).toDouble();
-        p.lastChecked = QDateTime::fromString(q.value(3).toString(), Qt::ISODate);
+        p.id = q.value(0).toInt();
+        p.name = q.value(1).toString();
+        p.url = q.value(2).toString();
+        p.price = q.value(3).toDouble();
+        p.lastChecked = QDateTime::fromString(q.value(4).toString(), Qt::ISODate);
         list.push_back(p);
     }
 
     return list;
 }
+
+bool DatabaseManager::updateProductPrice(int id, double price, const QDateTime& lastChecked)
+{
+    QSqlQuery q;
+    q.prepare(R"(
+        UPDATE products
+        SET price = ?, last_checked = ?
+        WHERE id = ?
+    )");
+
+    q.addBindValue(price);
+    q.addBindValue(lastChecked.toString(Qt::ISODate));
+    q.addBindValue(id);
+
+    if (!q.exec()) {
+        qDebug() << "Failed to update product id:" << id
+            << "-" << q.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+

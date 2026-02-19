@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QTableView>
 #include <QSqlTableModel>
+#include "PriceScraper.h"
 //#include "TaskManager.h"
 
 // Forward declaration of the auto-generated Ui::MainWindow class.
@@ -36,12 +37,17 @@ private slots:
     // Triggered when the "Delete" button is clicked
     void onDeleteClicked();
 
+    // Called when PriceScraper finishes updating product prices
+    // Updates the UI and synchronizes the database
+    void onProductsScraped(const QList<Product>& products);
+
 private:
-    Ui::MainWindow* ui;          // Pointer to the auto-generated UI from MainWindow.ui
+    Ui::MainWindow* ui;            // Pointer to the auto-generated UI from MainWindow.ui
     //TaskManager* m_taskManager;  // Handles background data fetching
-    QTableView* m_table;       // Table to display products
+    QTableView* m_table;           // Table to display products
     QSqlTableModel* m_model;       // Table to display products
     AddProductDialog* m_addDialog; // Dialog for adding a new product
+    PriceScraper* m_scraper;       // Web scrapper to check the price
 
     // Can remove if using TaskManager
     void loadDummyProducts();
